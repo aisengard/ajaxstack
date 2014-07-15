@@ -1,6 +1,6 @@
 class AjaxStack
 
-  stack: (url, settings, callback, fail_callback) ->
+  stack: (url, settings, callback, fail_callback, finish) ->
     self = @
     if not self.ajaxActive
       self.ajaxActive = true
@@ -15,7 +15,10 @@ class AjaxStack
       .always ->
         self.ajaxActive = false
         if self.nextAjaxSettings
-          self.stack(url, self.nextAjaxSettings, callback)
+          self.stack(url, self.nextAjaxSettings, callback, fail_callback, finish)
+        else
+          if $.type(finish) is 'function'
+            finish()
     else
       self.nextAjaxSettings = settings
 
